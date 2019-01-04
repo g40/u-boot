@@ -368,6 +368,7 @@ dtb-$(CONFIG_MACH_SUN8I_R40) += \
 dtb-$(CONFIG_MACH_SUN8I_V3S) += \
 	sun8i-v3s-licheepi-zero.dtb
 dtb-$(CONFIG_MACH_SUN50I_H5) += \
+	sun50i-h5-nanopi-k1-plus.dtb \
 	sun50i-h5-nanopi-neo2.dtb \
 	sun50i-h5-nanopi-neo-plus2.dtb \
 	sun50i-h5-orangepi-pc2.dtb \
