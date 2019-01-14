@@ -21,6 +21,10 @@
 #include <part.h>
 #include <usb.h>
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+#undef debug
+#define debug(fmt, args...)		printf(pr_fmt("%s(%d)"fmt),__FILE__,__LINE__, ##args);
+
 #ifdef CONFIG_USB_STORAGE
 static int usb_stor_curr_dev = -1; /* current device */
 #endif
@@ -582,6 +586,8 @@ static int do_usb_stop_keyboard(int force)
 static void do_usb_start(void)
 {
 	bootstage_mark_name(BOOTSTAGE_ID_USB_START, "usb_start");
+
+	TRACEX(0);
 
 	if (usb_init() < 0)
 		return;

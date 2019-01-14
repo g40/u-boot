@@ -39,6 +39,10 @@
 
 #define USB_BUFSIZ	512
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+#undef debug
+#define debug(fmt, args...)		printf(pr_fmt(fmt), ##args);
+
 static int asynch_allowed;
 char usb_started; /* flag for the started/stopped USB status */
 
@@ -61,6 +65,8 @@ int usb_init(void)
 	int controllers_initialized = 0;
 	int ret;
 
+	TRACEX(0);
+
 	dev_index = 0;
 	asynch_allowed = 1;
 	usb_hub_reset();
@@ -77,12 +83,14 @@ int usb_init(void)
 		printf("USB%d:   ", i);
 		ret = usb_lowlevel_init(i, USB_INIT_HOST, &ctrl);
 		if (ret == -ENODEV) {	/* No such device. */
+			TRACEX(0);
 			puts("Port not available.\n");
 			controllers_initialized++;
 			continue;
 		}
 
 		if (ret) {		/* Other error. */
+			TRACEX(0);
 			puts("lowlevel init failed\n");
 			continue;
 		}
@@ -90,37 +98,49 @@ int usb_init(void)
 		 * lowlevel init is OK, now scan the bus for devices
 		 * i.e. search HUBs and configure them
 		 */
+		TRACEX(0);
 		controllers_initialized++;
 		start_index = dev_index;
 		printf("scanning bus %d for devices... ", i);
 		ret = usb_alloc_new_device(ctrl, &dev);
 		if (ret)
+		{
+			TRACEX(0);
 			break;
+		}
 
 		/*
 		 * device 0 is always present
 		 * (root hub, so let it analyze)
 		 */
+		TRACEX(0);
 		ret = usb_new_device(dev);
 		if (ret)
 			usb_free_device(dev->controller);
 
+		TRACEX(0);
 		if (start_index == dev_index) {
 			puts("No USB Device found\n");
+			TRACEX(0);
 			continue;
 		} else {
 			printf("%d USB Device(s) found\n",
 				dev_index - start_index);
+			TRACEX(0);
 		}
 
 		usb_started = 1;
 	}
 
+	TRACEX(0);
 	debug("scan end\n");
 	/* if we were not able to find at least one working bus, bail out */
 	if (controllers_initialized == 0)
+	{
 		puts("USB error: all controllers failed lowlevel init\n");
-
+		TRACEX(0);
+	}
+	TRACEX(0);
 	return usb_started ? 0 : -ENODEV;
 }
 

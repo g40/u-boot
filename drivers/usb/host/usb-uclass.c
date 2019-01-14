@@ -15,6 +15,10 @@
 #include <dm/lists.h>
 #include <dm/uclass-internal.h>
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+#undef debug
+#define debug(fmt, args...)		printf(pr_fmt("%s(%d)"fmt),__FILE__,__LINE__, ##args);
+
 extern bool usb_started; /* flag for the started/stopped USB status */
 static bool asynch_allowed;
 
@@ -210,6 +214,7 @@ static void usb_scan_bus(struct udevice *bus, bool recurse)
 
 	assert(recurse);	/* TODO: Support non-recusive */
 
+	TRACEX(0);
 	printf("scanning bus %d for devices... ", bus->seq);
 	debug("\n");
 	ret = usb_scan_device(bus, 0, USB_SPEED_FULL, &dev);
@@ -219,6 +224,8 @@ static void usb_scan_bus(struct udevice *bus, bool recurse)
 		printf("No USB Device found\n");
 	else
 		printf("%d USB Device(s) found\n", priv->next_addr);
+
+	TRACEX(0);
 }
 
 static void remove_inactive_children(struct uclass *uc, struct udevice *bus)
@@ -245,6 +252,7 @@ int usb_init(void)
 	int count = 0;
 	int ret;
 
+	TRACEX(0);
 	asynch_allowed = 1;
 
 	ret = uclass_get(UCLASS_USB, &uc);
@@ -593,6 +601,7 @@ int usb_scan_device(struct udevice *parent, int port,
 	ALLOC_CACHE_ALIGN_BUFFER(struct usb_device, udev, 1);
 	struct usb_interface_descriptor *iface = &udev->config.if_desc[0].desc;
 
+	TRACEX(0);
 	*devp = NULL;
 	memset(udev, '\0', sizeof(*udev));
 	udev->controller_dev = usb_get_bus(parent);

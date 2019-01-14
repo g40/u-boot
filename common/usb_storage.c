@@ -51,7 +51,13 @@
 #undef BBB_XPORT_TRACE
 
 #include <scsi.h>
-/* direction table -- this indicates the direction of the data
+
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
+#undef debug
+#define debug(fmt, args...)		printf(pr_fmt(fmt), ##args);
+
+ /* direction table -- this indicates the direction of the data
  * transfer for each command code -- a 1 indicates input
  */
 static const unsigned char us_direction[256/8] = {
@@ -187,6 +193,8 @@ static int usb_stor_probe_device(struct usb_device *udev)
 {
 	int lun, max_lun;
 
+	TRACEX(0);
+
 #ifdef CONFIG_BLK
 	struct us_data *data;
 	int ret;
@@ -197,6 +205,7 @@ static int usb_stor_probe_device(struct usb_device *udev)
 		return -ENOENT; /* no more devices available */
 #endif
 
+	TRACEX(0);
 	debug("\n\nProbing for storage\n");
 #ifdef CONFIG_BLK
 	/*
@@ -247,15 +256,19 @@ static int usb_stor_probe_device(struct usb_device *udev)
 		return -ENOSPC;
 	}
 
+	TRACEX(0);
+
 	if (!usb_storage_probe(udev, 0, &usb_stor[usb_max_devs]))
 		return 0;
 
+	TRACEX(0);
 	/*
 	 * OK, it's a storage device.  Iterate over its LUNs and populate
 	 * usb_dev_desc'
 	 */
 	start = usb_max_devs;
 
+	TRACEX(0);
 	max_lun = usb_get_max_lun(&usb_stor[usb_max_devs]);
 	for (lun = 0; lun <= max_lun && usb_max_devs < USB_MAX_STOR_DEV;
 	     lun++) {
@@ -283,6 +296,8 @@ static int usb_stor_probe_device(struct usb_device *udev)
 		}
 	}
 #endif
+
+	TRACEX(0);
 
 	return 0;
 }
@@ -1299,6 +1314,7 @@ int usb_storage_probe(struct usb_device *dev, unsigned int ifnum,
 	struct usb_endpoint_descriptor *ep_desc;
 	unsigned int flags = 0;
 
+	TRACEX(0);
 	/* let's examine the device now */
 	iface = &dev->config.if_desc[ifnum];
 
@@ -1311,6 +1327,7 @@ int usb_storage_probe(struct usb_device *dev, unsigned int ifnum,
 		return 0;
 	}
 
+	TRACEX(0);
 	memset(ss, 0, sizeof(struct us_data));
 
 	/* At this point, we know we've got a live one */
@@ -1505,6 +1522,8 @@ static int usb_mass_storage_probe(struct udevice *dev)
 {
 	struct usb_device *udev = dev_get_parent_priv(dev);
 	int ret;
+
+	TRACEX(0);
 
 	usb_disable_asynch(1); /* asynch transfer not allowed */
 	ret = usb_stor_probe_device(udev);
