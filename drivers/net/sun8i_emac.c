@@ -25,6 +25,8 @@
 #include <asm-generic/gpio.h>
 #endif
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
 #define MDIO_CMD_MII_BUSY		BIT(0)
 #define MDIO_CMD_MII_WRITE		BIT(1)
 
@@ -318,6 +320,8 @@ static int sun8i_phy_init(struct emac_eth_dev *priv, void *dev)
 {
 	struct phy_device *phydev;
 
+	TRACEX(0);
+
 	phydev = phy_connect(priv->bus, priv->phyaddr, dev, priv->interface);
 	if (!phydev)
 		return -ENODEV;
@@ -326,6 +330,8 @@ static int sun8i_phy_init(struct emac_eth_dev *priv, void *dev)
 
 	priv->phydev = phydev;
 	phy_config(priv->phydev);
+
+	TRACEX(0);
 
 	return 0;
 }
@@ -762,6 +768,8 @@ static int sun8i_emac_eth_probe(struct udevice *dev)
 
 	priv->mac_reg = (void *)pdata->iobase;
 
+	TRACEX(0);
+
 	sun8i_emac_board_setup(priv);
 	sun8i_emac_set_syscon(priv);
 
@@ -794,19 +802,24 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	int ret = 0;
 #endif
 
+	TRACEX(0);
+
 	pdata->iobase = devfdt_get_addr(dev);
 	if (pdata->iobase == FDT_ADDR_T_NONE) {
+		TRACEX(0);
 		debug("%s: Cannot find MAC base address\n", __func__);
 		return -EINVAL;
 	}
 
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "syscon");
 	if (offset < 0) {
+		TRACEX(0);
 		debug("%s: cannot find syscon node\n", __func__);
 		return -EINVAL;
 	}
 	reg = fdt_getprop(gd->fdt_blob, offset, "reg", NULL);
 	if (!reg) {
+		TRACEX(0);
 		debug("%s: cannot find reg property in syscon node\n",
 		      __func__);
 		return -EINVAL;
@@ -814,6 +827,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	priv->sysctl_reg = fdt_translate_address((void *)gd->fdt_blob,
 						 offset, reg);
 	if (priv->sysctl_reg == FDT_ADDR_T_NONE) {
+		TRACEX(0);
 		debug("%s: Cannot find syscon base address\n", __func__);
 		return -EINVAL;
 	}
@@ -824,6 +838,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "phy-handle");
 	if (offset < 0) {
+		TRACEX(0);
 		debug("%s: Cannot find PHY address\n", __func__);
 		return -EINVAL;
 	}
@@ -836,6 +851,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	printf("phy interface%d\n", pdata->phy_interface);
 
 	if (pdata->phy_interface == -1) {
+		TRACEX(0);
 		debug("%s: Invalid PHY interface '%s'\n", __func__, phy_mode);
 		return -EINVAL;
 	}
@@ -843,6 +859,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	priv->variant = dev_get_driver_data(dev);
 
 	if (!priv->variant) {
+		TRACEX(0);
 		printf("%s: Missing variant '%s'\n", __func__,
 		       (char *)priv->variant);
 		return -EINVAL;
@@ -863,6 +880,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 		parse_phy_pins(dev);
 
 #ifdef CONFIG_DM_GPIO
+	TRACEX(0);
 	if (fdtdec_get_bool(gd->fdt_blob, dev_of_offset(dev),
 			    "snps,reset-active-low"))
 		reset_flags |= GPIOD_ACTIVE_LOW;
@@ -878,6 +896,8 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 		ret = 0;
 	}
 #endif
+
+	TRACEX(0);
 
 	return 0;
 }

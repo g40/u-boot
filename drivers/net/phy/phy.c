@@ -25,6 +25,8 @@ DECLARE_GLOBAL_DATA_PTR;
 
 /* Generic PHY support and helper functions */
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
 /**
  * genphy_config_advert - sanitize and advertise auto-negotiation parameters
  * @phydev: target phy_device struct
@@ -884,9 +886,11 @@ struct phy_device *phy_connect(struct mii_dev *bus, int addr,
 #endif
 {
 	struct phy_device *phydev = NULL;
+
 #ifdef CONFIG_PHY_FIXED
 	int sn;
 	const char *name;
+	TRACEX(0);
 
 	sn = fdt_first_subnode(gd->fdt_blob, dev_of_offset(dev));
 	while (sn > 0) {
@@ -899,6 +903,8 @@ struct phy_device *phy_connect(struct mii_dev *bus, int addr,
 		sn = fdt_next_subnode(gd->fdt_blob, sn);
 	}
 #endif
+	TRACEX(0);
+
 	if (!phydev)
 		phydev = phy_find_by_mask(bus, 1 << addr, interface);
 
@@ -914,16 +920,26 @@ struct phy_device *phy_connect(struct mii_dev *bus, int addr,
  */
 int phy_startup(struct phy_device *phydev)
 {
+	TRACEX(0);
+
 	if (phydev->drv->startup)
 		return phydev->drv->startup(phydev);
+
+	TRACEX(0);
 
 	return 0;
 }
 
 __weak int board_phy_config(struct phy_device *phydev)
 {
+	TRACEX(0);
+
 	if (phydev->drv->config)
+	{
+		TRACEX(0);
 		return phydev->drv->config(phydev);
+	}
+	TRACEX(0);
 	return 0;
 }
 
