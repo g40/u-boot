@@ -53,7 +53,7 @@
 
 	aliases {
 		serial0 = &uart0;
-		/*ethernet0 = &emac;*/
+		ethernet0 = &emac;
 	};
 
 	chosen {
@@ -78,20 +78,16 @@
 	status = "okay";
 };
 
-&mdio {
-	ext_rgmii_phy: ethernet-phy@1 {
+&external_mdio {
+	ext_rgmii_phy: ethernet-phy@7 {
 		compatible = "ethernet-phy-ieee802.3-c22";
-		reg = <0>;
+		reg = <7>;
 	};
 };
 
 &mmc0 {
-	compatible = "allwinner,sun50i-h5-mmc",
-		     "allwinner,sun50i-a64-mmc",
-		     "allwinner,sun5i-a13-mmc";
-	pinctrl-names = "default";
-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
 	vmmc-supply = <&reg_vcc3v3>;
+	
 	bus-width = <4>;
 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 	status = "okay";
