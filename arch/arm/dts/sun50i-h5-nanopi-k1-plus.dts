@@ -75,7 +75,7 @@
 	phy-mode = "rgmii";
 	/* To be filled in by U-Boot */
 	mac-address = [00 00 00 00 00 00];
-	status = "okay";
+	status = "disabled";
 };
 
 &external_mdio {
