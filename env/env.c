@@ -258,7 +258,7 @@ int env_init(void)
 	if (ret == -ENOENT) {
 		gd->env_addr = (ulong)&default_environment[0];
 		gd->env_valid = ENV_VALID;
-
+		printf("%s(%d) Loaded default environment\n",__FILE__,__LINE__);
 		return 0;
 	}
 
