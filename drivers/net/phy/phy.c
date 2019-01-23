@@ -21,6 +21,9 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
 /* Generic PHY support and helper functions */
 
 /**

@@ -25,6 +25,8 @@
 #include <asm-generic/gpio.h>
 #endif
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
 #define MDIO_CMD_MII_BUSY		BIT(0)
 #define MDIO_CMD_MII_WRITE		BIT(1)
 
@@ -857,7 +859,8 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 
 	pdata->phy_interface = -1;
 	priv->phyaddr = -1;
-	priv->use_internal_phy = false;
+	//priv->use_internal_phy = false;
+	priv->use_internal_phy = true;
 
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "phy-handle");
 	if (offset < 0) {
