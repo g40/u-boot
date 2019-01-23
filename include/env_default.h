@@ -9,6 +9,16 @@
 
 #include <env_callback.h>
 
+#define CONFIG_SERVERIP 192.168.1.97
+
+/* N.B. For Devuan v3 appears _essential_ */
+#define CONFIG_BOOTCOMMAND \
+	"setenv bootargs console=ttyS0,115200 earlyprintk rootwait rw ip=dhcp nfsroot=192.168.1.98:/home/nfs_local,v3 root=/dev/nfs; " \
+	"setenv autoload no; dhcp; " \
+	"tftpboot 0x46000000 192.168.1.97:Image; " \
+	"tftpboot 0x48000000 192.168.1.97:sun50i-h5-nanopi-k1-plus.dtb; " \
+	"booti 0x46000000 - 0x48000000; " \
+
 #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
 env_t environment __UBOOT_ENV_SECTION__(environment) = {
 	ENV_CRC,	/* CRC Sum */
