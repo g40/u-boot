@@ -861,7 +861,8 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	priv->phyaddr = -1;
 	//priv->use_internal_phy = false;
 	priv->use_internal_phy = true;
-
+	TRACEX("Using internal phy handle");
+	
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "phy-handle");
 	if (offset < 0) {
 		debug("%s: Cannot find PHY address\n", __func__);
@@ -911,6 +912,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	}
 #endif
 
+	TRACEX("sun8i_emac_eth_ofdata_to_platdata => 0");
 	return 0;
 }
 
