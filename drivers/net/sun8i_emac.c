@@ -859,9 +859,7 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 
 	pdata->phy_interface = -1;
 	priv->phyaddr = -1;
-	//priv->use_internal_phy = false;
-	priv->use_internal_phy = true;
-	TRACEX("Using internal phy handle");
+	priv->use_internal_phy = false;
 	
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "phy-handle");
 	if (offset < 0) {
@@ -881,13 +879,20 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 		return -EINVAL;
 	}
 
+	printf("%s(%d) priv->variant => 0x%x (%d)\n",__FILE__,__LINE__,priv->variant,priv->variant);
 	if (priv->variant == H3_EMAC) {
+		int compatible = 0;
 		int parent = fdt_parent_offset(gd->fdt_blob, offset);
-
-		if (parent >= 0 &&
-		    !fdt_node_check_compatible(gd->fdt_blob, parent,
-				"allwinner,sun8i-h3-mdio-internal"))
+		printf("%s(%d) parent => 0x%x (%d)\n",__FILE__,__LINE__,parent,parent);
+		compatible = fdt_node_check_compatible(gd->fdt_blob, parent,
+				"allwinner,sun8i-h3-mdio-internal");
+		printf("%s(%d) compatible => 0x%x (%d)\n",__FILE__,__LINE__,compatible,compatible);
+		if (parent >= 0 && !compatible)
+		{
 			priv->use_internal_phy = true;
+			printf("%s(%d) priv->use_internal_phy => 0x%x (%d)\n",__FILE__,__LINE__,priv->use_internal_phy,priv->use_internal_phy);
+		}
+			
 	}
 
 	priv->interface = pdata->phy_interface;
