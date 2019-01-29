@@ -881,12 +881,13 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	}
 
 	if (priv->variant == H3_EMAC) {
+		TRACEX("");
 		int parent = fdt_parent_offset(gd->fdt_blob, offset);
-
-		if (parent >= 0 &&
-		    !fdt_node_check_compatible(gd->fdt_blob, parent,
-				"allwinner,sun8i-h3-mdio-internal"))
+		if (parent >= 0 && !fdt_node_check_compatible(gd->fdt_blob, parent,"allwinner,sun8i-h3-mdio-internal"))
+		{
+			TRACEX("");
 			priv->use_internal_phy = true;
+		}
 	}
 
 	priv->interface = pdata->phy_interface;

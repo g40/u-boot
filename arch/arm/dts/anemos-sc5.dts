@@ -71,19 +71,21 @@
 &emac {
 	pinctrl-names = "default";
 	pinctrl-0 = <&emac_rgmii_pins>;
-	phy-handle = <&ext_rgmii_phy>;
+	phy-handle = <&int_mii_phy>;
 	phy-mode = "rgmii";
 	/* To be filled in by U-Boot */
 	mac-address = [00 00 00 00 00 00];
 	status = "okay";
 };
 
+/*
 &external_mdio {
 	ext_rgmii_phy: ethernet-phy@7 {
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <7>;
 	};
 };
+*/
 
 &mmc0 {
 	vmmc-supply = <&reg_vcc3v3>;
