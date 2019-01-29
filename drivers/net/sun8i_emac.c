@@ -859,8 +859,9 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 
 	pdata->phy_interface = -1;
 	priv->phyaddr = -1;
-	//priv->use_internal_phy = false;
-	priv->use_internal_phy = true;
+	//
+	priv->use_internal_phy = false;
+	// priv->use_internal_phy = true;
 
 	offset = fdtdec_lookup_phandle(gd->fdt_blob, node, "phy-handle");
 	if (offset < 0) {
