@@ -25,7 +25,6 @@
 #include <asm-generic/gpio.h>
 #endif
 
-#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
 
 #define MDIO_CMD_MII_BUSY		BIT(0)
 #define MDIO_CMD_MII_WRITE		BIT(1)
@@ -882,11 +881,9 @@ static int sun8i_emac_eth_ofdata_to_platdata(struct udevice *dev)
 	}
 
 	if (priv->variant == H3_EMAC) {
-		TRACEX("");
 		int parent = fdt_parent_offset(gd->fdt_blob, offset);
 		if (parent >= 0 && !fdt_node_check_compatible(gd->fdt_blob, parent,"allwinner,sun8i-h3-mdio-internal"))
 		{
-			TRACEX("");
 			priv->use_internal_phy = true;
 		}
 	}
