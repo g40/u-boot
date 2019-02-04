@@ -18,6 +18,8 @@
 #include <errno.h>
 #include <dm/device-internal.h>
 
+#define TRACEX(arg) printf("%s(%d) %s\n",__FILE__,__LINE__,(arg? arg : "..."))
+
 #ifndef CONFIG_ENV_SPI_BUS
 # define CONFIG_ENV_SPI_BUS	CONFIG_SF_DEFAULT_BUS
 #endif
@@ -56,6 +58,7 @@ static int setup_flash_device(void)
 	struct udevice *new;
 	int	ret;
 
+	TRACEX("");
 	/* speed and mode will be read from DT */
 	ret = spi_flash_probe_bus_cs(CONFIG_ENV_SPI_BUS, CONFIG_ENV_SPI_CS,
 				     CONFIG_ENV_SPI_MAX_HZ, CONFIG_ENV_SPI_MODE,
@@ -267,20 +270,25 @@ static int env_sf_load(void)
 	int ret;
 	char *buf = NULL;
 
+	TRACEX("env_sf_load()");
 	buf = (char *)memalign(ARCH_DMA_MINALIGN, CONFIG_ENV_SIZE);
 	if (!buf) {
 		set_default_env("malloc() failed", 0);
+		TRACEX("");
 		return -EIO;
 	}
 
+	TRACEX("");
 	ret = setup_flash_device();
 	if (ret)
 		goto out;
 
+	TRACEX("");
 	ret = spi_flash_read(env_flash,
 		CONFIG_ENV_OFFSET, CONFIG_ENV_SIZE, buf);
 	if (ret) {
 		set_default_env("spi_flash_read() failed", 0);
+		TRACEX("");
 		goto err_read;
 	}
 
@@ -291,9 +299,11 @@ static int env_sf_load(void)
 err_read:
 	spi_flash_free(env_flash);
 	env_flash = NULL;
+	TRACEX("");
 out:
 	free(buf);
 
+	TRACEX("");
 	return ret;
 }
 #endif
