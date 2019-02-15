@@ -14,7 +14,7 @@
 /* N.B. For Devuan v3 appears _essential_ */
 #define CONFIG_BOOTCOMMAND \
 	"setenv server_ip 192.168.100.252; " \
-	"setenv bootargs console=ttyS0,115200 earlyprintk rootwait rw ip=dhcp nfsroot=${server_ip}:/home/nfs_local,v3 root=/dev/nfs loglevel=6; " \
+	"setenv bootargs console=ttyS0,115200 net.ifnames=0 earlyprintk rootwait rw ip=dhcp nfsroot=${server_ip}:/home/nfs_local,v3 root=/dev/nfs loglevel=6; " \
 	"setenv autoload no; dhcp; " \
 	"tftpboot 0x46000000 ${server_ip}:Image; " \
 	"tftpboot 0x48000000 ${server_ip}:anemos-sc5.dtb; " \

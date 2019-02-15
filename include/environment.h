@@ -9,6 +9,7 @@
 
 #include <linux/kconfig.h>
 
+
 // hack
 #define CONFIG_ENV_SECT_SIZE	0x40000	/* 256K(one sector) for env */
 #define CONFIG_ENV_SIZE		0x2000
