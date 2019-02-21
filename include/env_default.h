@@ -21,7 +21,9 @@
 	"ext4load mmc 1 0x46000000 /boot/Image; " \
 	"ext4load mmc 1 0x48000000 /boot/anemos-sc5.dtb; " \
 	"booti 0x46000000 - 0x48000000; "
+	
 #else
+	
 /* N.B. For Devuan v3 appears _essential_ */
 #define CONFIG_BOOTCOMMAND \
 	"setenv server_ip 192.168.1.98; " \
@@ -29,7 +31,8 @@
 	"setenv autoload no; dhcp; " \
 	"tftpboot 0x46000000 ${server_ip}:/home/nfs_boot/Image; " \
 	"tftpboot 0x48000000 ${server_ip}:/home/nfs_boot/anemos-sc5.dtb; " \
-	"booti 0x46000000 - 0x48000000; " \
+	"booti 0x46000000 - 0x48000000; "
+	
 #endif
 
 #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
