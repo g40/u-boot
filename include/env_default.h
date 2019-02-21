@@ -11,6 +11,17 @@
 
 #define CONFIG_SERVERIP 192.168.1.97
 
+#define _USE_EMMC
+
+#ifdef _USE_EMMC
+
+/* boot from single EXT4 partition in eMMC. Must contain kernel and DTB in /boot */
+#define CONFIG_BOOTCOMMAND \
+	"setenv bootargs console=ttyS0,115200 net.ifnames=0 earlyprintk root=/dev/mmcblk1p1 rootfstype=ext4 rootwait rw; " \
+	"ext4load mmc 1 0x46000000 /boot/Image; " \
+	"ext4load mmc 1 0x48000000 /boot/anemos-sc5.dtb; " \
+	"booti 0x46000000 - 0x48000000; "
+#else
 /* N.B. For Devuan v3 appears _essential_ */
 #define CONFIG_BOOTCOMMAND \
 	"setenv server_ip 192.168.1.98; " \
@@ -19,6 +30,7 @@
 	"tftpboot 0x46000000 ${server_ip}:/home/nfs_boot/Image; " \
 	"tftpboot 0x48000000 ${server_ip}:/home/nfs_boot/anemos-sc5.dtb; " \
 	"booti 0x46000000 - 0x48000000; " \
+#endif
 
 #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
 env_t environment __UBOOT_ENV_SECTION__(environment) = {
